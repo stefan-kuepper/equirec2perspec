@@ -12,7 +12,6 @@ Split panorama into perspective view with given parameters
 
 ## Usage
 ```python
-import os
 import cv2 
 import Equirec2Perspec as E2P 
 

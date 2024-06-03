@@ -1,7 +1,21 @@
-import os
-import sys
+from importlib.util import find_spec
 import cv2
 import numpy as np
+try:
+    from turbojpeg import TurboJPEG
+except ImportError:
+    pass
+
+
+def load_image(path):
+    if find_spec("turbojpeg") != None:
+        tjpg = TurboJPEG()
+        with open(path, 'rb') as img:
+            image = tjpg.decode(img.read())
+    else:
+        image = cv2.imread(path, cv2.IMREAD_COLOR)
+
+    return image
 
 def xyz2lonlat(xyz):
     atan2 = np.arctan2
@@ -28,9 +42,10 @@ def lonlat2XY(lonlat, shape):
 
     return out 
 
+
 class Equirectangular:
     def __init__(self, img_name):
-        self._img = cv2.imread(img_name, cv2.IMREAD_COLOR)
+        self._img = load_image(img_name)
         [self._height, self._width, _] = self._img.shape
   
 
@@ -46,7 +61,7 @@ class Equirectangular:
             interpolation (_type_, optional): see cv2.remap. Defaults to cv2.INTER_CUBIC.
 
         Returns:
-            _type_: image as np array
+            np.ndarray: perspective view
         """        
 
         f = 0.5 * width * 1 / np.tan(0.5 * FOV / 180.0 * np.pi)
