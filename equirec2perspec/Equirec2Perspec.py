@@ -3,8 +3,9 @@ import cv2
 import numpy as np
 try:
     from turbojpeg import TurboJPEG
+    print("Using TurboJPEG")
 except ImportError:
-    pass
+    print("USING opencv imread")
 
 
 def load_image(path):
