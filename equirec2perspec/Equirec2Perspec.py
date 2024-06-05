@@ -9,7 +9,7 @@ except ImportError:
 
 
 def load_image(path):
-    if find_spec("turbojpeg") != None:
+    if find_spec("turbojpeg") is not None:
         tjpg = TurboJPEG()
         with open(path, 'rb') as img:
             image = tjpg.decode(img.read())
