@@ -6,7 +6,7 @@ authors = ["Stefan Küpper <stefan.kuepper@posteo.de>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.9"
 pyturbojpeg = {version = "^1.7.3", optional = true}
 numpy = "^1.26.4"
 opencv-python = "^4.9.0.80"
