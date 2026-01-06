@@ -23,6 +23,7 @@ classifiers = [
 dependencies = [
     "numpy>=1.26.4",
     "opencv-python>=4.9.0.80",
+    "click>=8.0.0",
 ]
 
 [project.optional-dependencies]
@@ -31,6 +32,9 @@ turbojpeg = ["pyturbojpeg>=1.7.3"]
 [project.urls]
 Homepage = "https://github.com/stefan-kuepper/equirec2perspec"
 Repository = "https://github.com/stefan-kuepper/equirec2perspec"
+
+[project.scripts]
+equirec2perspec = "equirec2perspec.cli:main"
 
 [build-system]
 requires = ["hatchling"]

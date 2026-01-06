@@ -72,6 +72,65 @@ To install with TurboJPEG support for faster JPEG processing:
 uv sync --extra turbojpeg
 ```
 
+## Command Line Interface
+
+The package includes a command-line interface (CLI) for easy conversion without writing Python code.
+
+### Basic Usage
+
+```bash
+# Basic conversion with defaults (60° FOV, center view)
+equirec2perspec panorama.jpg perspective.jpg
+
+# View different angles
+equirec2perspec --fov 90 --theta 45 input.jpg output.jpg
+
+# High quality output
+equirec2perspec --fov 60 --interpolation lanczos --quality 100 input.jpg output.jpg
+```
+
+### CLI Options
+
+| Option | Description | Default | Range |
+|--------|-------------|---------|-------|
+| `--fov` | Field of view angle in degrees | 60 | 1-180 |
+| `--theta` | Horizontal rotation angle in degrees | 0 | -180 to 180 |
+| `--phi` | Vertical rotation angle in degrees | 0 | -90 to 90 |
+| `--width` | Output image width in pixels | auto (1920) | > 0 |
+| `--height` | Output image height in pixels | auto (1080) | > 0 |
+| `--interpolation` | Interpolation method | bicubic | nearest/bilinear/bicubic/lanczos |
+| `--quality` | JPEG output quality | 95 | 1-100 |
+| `--verbose` | Enable detailed output | False | - |
+
+### CLI Examples
+
+```bash
+# Extract front view with default settings
+equirec2perspec panorama.jpg front_view.jpg
+
+# Look 90° to the right with wide field of view
+equirec2perspec --fov 120 --theta 90 panorama.jpg right_view.jpg
+
+# Look up at 30° with high quality
+equirec2perspec --fov 75 --phi -30 --interpolation lanczos --quality 100 panorama.jpg up_view.jpg
+
+# Custom output dimensions (4K resolution)
+equirec2perspec --width 3840 --height 2160 --fov 60 panorama.jpg 4k_view.jpg
+
+# Only specify width (height auto-calculated to maintain 16:9 ratio)
+equirec2perspec --width 2560 panorama.jpg wide_view.jpg
+
+# Only specify height (width auto-calculated)
+equirec2perspec --height 1440 panorama.jpg tall_view.jpg
+```
+
+### Getting Help
+
+```bash
+# Show all available options
+equirec2perspec --help
+```
+
 ### Dependencies
 
 **Required:**
