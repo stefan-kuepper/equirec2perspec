@@ -231,16 +231,7 @@ equirec2perspec/
 
 MIT License - See [LICENSE.md](LICENSE.md) for details
 
-## Author
-
-Stefan Küpper
-Email: stefan.kuepper@posteo.de
-GitHub: [@stefan-kuepper](https://github.com/stefan-kuepper)
-
 ## Repository
 
 https://github.com/stefan-kuepper/equirec2perspec
 
-## Version
-
-0.1.0 - Initial release with core functionality and modern packaging support
