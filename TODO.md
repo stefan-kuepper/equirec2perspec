@@ -15,21 +15,21 @@
 - [x] Write integration tests with sample images
 - [x] Add `pytest-cov` for coverage reporting
 - [x] Target minimum 80% code coverage
-- [ ] Add coverage badge to README
+- [x] Add coverage badge to README
 
 ### CI/CD Pipeline
-- [ ] Create `.github/workflows/` directory
-- [ ] Add `ci.yml` workflow for automated testing
-  - Test on Python 3.9, 3.10, 3.11, 3.12
-  - Test on Ubuntu, macOS, Windows
-  - Run linting checks
-  - Run type checking
-  - Generate coverage report
-- [ ] Add `publish.yml` workflow for PyPI releases
-  - Trigger on git tags
-  - Build wheel and sdist
-  - Publish to PyPI
-- [ ] Add status badges to README
+- [x] Create `.github/workflows/` directory
+- [x] Add `ci.yml` workflow for automated testing
+  - [x] Test on Python 3.9, 3.10, 3.11, 3.12
+  - [x] Test on Ubuntu, macOS, Windows
+  - [x] Run linting checks
+  - [x] Run type checking
+  - [x] Generate coverage report
+- [x] Add `publish.yml` workflow for PyPI releases
+  - [x] Trigger on git tags
+  - [x] Build wheel and sdist
+  - [x] Publish to PyPI
+- [x] Add status badges to README
 
 ### Error Handling & Validation
 - [ ] Add error handling in `load_image()` (line 11-19)
@@ -70,11 +70,11 @@
 - [ ] Add type hints to `xyz2lonlat()` parameters and return
 - [ ] Add type hints to `lonlat2XY()` parameters and return
 - [ ] Add docstring and types to `__init__()`
-- [ ] Add `mypy` as development dependency
-- [ ] Create `mypy.ini` configuration file
+- [x] Add `mypy` as development dependency
+- [x] Create `mypy.ini` configuration file
 - [ ] Create `py.typed` marker file in package
 - [ ] Run mypy and fix any type errors
-- [ ] Add mypy to CI pipeline
+- [x] Add mypy to CI pipeline
 
 ### Pre-commit Hooks
 - [ ] Add `pre-commit` as development dependency
