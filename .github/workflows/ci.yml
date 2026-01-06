@@ -21,14 +21,8 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
-      - name: Run ruff check
-        run: uv run ruff check
-
-      - name: Run ruff format check
-        run: uv run ruff format --check
-
-      - name: Run mypy type checking
-        run: uv run mypy src/equirec2perspec
+      - name: Run lint checks
+        run: ./scripts/lint.sh
 
   test:
     runs-on: ${{ matrix.os }}
@@ -43,17 +37,11 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
-        run: uv python install ${{ matrix.python-version }}
-
-      - name: Install dependencies
-        run: uv sync --python ${{ matrix.python-version }}
-
-      - name: Verify package imports
-        run: uv run python -c "from equirec2perspec import Equirectangular; print('Import successful')"
-
-      - name: Run tests with coverage
-        run: uv run pytest --cov=src/equirec2perspec --cov-report=xml --cov-report=term-missing
+      - name: Run tests
+        run: ./scripts/test.sh
+        env:
+          PYTHON_VERSION: ${{ matrix.python-version }}
+          COVERAGE: "true"
 
       - name: Upload coverage to Codecov
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
