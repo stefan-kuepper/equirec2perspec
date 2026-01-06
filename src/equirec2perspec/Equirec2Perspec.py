@@ -1,31 +1,52 @@
 import logging
 from importlib.util import find_spec
+from pathlib import Path
+from typing import TYPE_CHECKING, Tuple, Union
 
 import cv2
 import numpy as np
 
 logger = logging.getLogger(__name__)
 
-try:
-    from turbojpeg import TurboJPEG
+if TYPE_CHECKING:
+    try:
+        from turbojpeg import TurboJPEG
+    except ImportError:
+        TurboJPEG = None
+else:
+    try:
+        from turbojpeg import TurboJPEG
 
-    logger.debug("Using TurboJPEG")
-except ImportError:
-    logger.debug("USING opencv imread")
+        logger.debug("Using TurboJPEG")
+    except ImportError:
+        logger.debug("USING opencv imread")
+        TurboJPEG = None
+    TurboJPEG = None
 
 
-def load_image(path):
-    if find_spec("turbojpeg") is not None:
+def load_image(path: Union[str, Path]) -> Optional[np.ndarray]:
+    """Load an image from file path, supporting both str and Path objects.
+
+    Args:
+        path: Path to the image file
+
+    Returns:
+        Loaded image as numpy array, or None if loading fails
+
+    """
+    path_str = str(path)
+
+    if find_spec("turbojpeg") is not None and TurboJPEG is not None:
         tjpg = TurboJPEG()
-        with open(path, "rb") as img:
+        with open(path_str, "rb") as img:
             image = tjpg.decode(img.read())
     else:
-        image = cv2.imread(path, cv2.IMREAD_COLOR)
+        image = cv2.imread(path_str, cv2.IMREAD_COLOR)
 
     return image
 
 
-def xyz2lonlat(xyz):
+def xyz2lonlat(xyz: np.ndarray) -> np.ndarray:
     atan2 = np.arctan2
     asin = np.arcsin
 
@@ -43,7 +64,7 @@ def xyz2lonlat(xyz):
     return out
 
 
-def lonlat2XY(lonlat, shape):
+def lonlat2XY(lonlat: np.ndarray, shape: Tuple[int, int, int]) -> np.ndarray:
     X = (lonlat[..., 0:1] / (2 * np.pi) + 0.5) * (shape[1] - 1)
     Y = (lonlat[..., 1:] / (np.pi) + 0.5) * (shape[0] - 1)
     lst = [X, Y]
@@ -53,8 +74,16 @@ def lonlat2XY(lonlat, shape):
 
 
 class Equirectangular:
-    def __init__(self, img_name):
+    def __init__(self, img_name: Union[str, Path]):
+        """Initialize Equirectangular with an image file.
+
+        Args:
+            img_name: Path to the equirectangular panorama image
+
+        """
         self._img = load_image(img_name)
+        if self._img is None:
+            raise AttributeError(f"Failed to load image: {img_name}")
         [self._height, self._width, _] = self._img.shape
 
     def GetPerspective(
@@ -64,8 +93,8 @@ class Equirectangular:
         PHI: float,
         height: int,
         width: int,
-        interpolation=cv2.INTER_CUBIC,
-    ):
+        interpolation: int = cv2.INTER_CUBIC,
+    ) -> np.ndarray:
         """Split equirectangular panorama into normal perspective view
 
         Args:
