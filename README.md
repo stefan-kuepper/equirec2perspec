@@ -231,6 +231,12 @@ equirec2perspec/
 
 MIT License - See [LICENSE.md](LICENSE.md) for details
 
+## Attribution
+
+This project is a fork of the original [Equirec2Perspec](https://github.com/fuenwang/Equirec2Perspec) by [Fu-En Wang](https://github.com/fuenwang).
+
+Original work Copyright (c) 2021 Fu-En Wang
+
 ## Repository
 
 https://github.com/stefan-kuepper/equirec2perspec
