@@ -42,6 +42,7 @@ def load_image(path: Union[str, Path]) -> np.ndarray:
 
     path_str = str(path)
     image: Optional[np.ndarray] = None
+    logger.debug(f"Loading image: {path_str}")
 
     try:
         if TurboJPEG is not None:
@@ -49,12 +50,14 @@ def load_image(path: Union[str, Path]) -> np.ndarray:
             try:
                 with open(path_str, "rb") as img:
                     image = tjpg.decode(img.read())
+                logger.debug(f"Successfully decoded with TurboJPEG: {path_str}")
             except Exception as e:
                 raise ValueError(
                     f"Failed to decode image with TurboJPEG: {path}"
                 ) from e
         else:
             image = cv2.imread(path_str, cv2.IMREAD_COLOR)
+            logger.debug(f"Successfully decoded with OpenCV: {path_str}")
     except (OSError, IOError) as e:
         raise IOError(f"Failed to read image file: {path}") from e
 
@@ -64,6 +67,7 @@ def load_image(path: Union[str, Path]) -> np.ndarray:
             f"Failed to decode image (unsupported format or corrupted file): {path}"
         )
 
+    logger.debug(f"Image loaded: shape={image.shape}, dtype={image.dtype}")
     return image
 
 
