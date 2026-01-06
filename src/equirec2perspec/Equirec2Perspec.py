@@ -91,9 +91,8 @@ def xyz2lonlat(xyz: np.ndarray) -> np.ndarray:
 
     lon = atan2(x, z)
     lat = asin(y)
-    lst = [lon, lat]
 
-    out: np.ndarray = np.concatenate(lst, axis=-1)
+    out: np.ndarray = np.concatenate([lon, lat], axis=-1)
     return out
 
 
@@ -112,8 +111,7 @@ def lonlat2XY(lonlat: np.ndarray, shape: Tuple[int, int, int]) -> np.ndarray:
     """
     X = (lonlat[..., 0:1] / (2 * np.pi) + 0.5) * (shape[1] - 1)
     Y = (lonlat[..., 1:] / (np.pi) + 0.5) * (shape[0] - 1)
-    lst = [X, Y]
-    out: np.ndarray = np.concatenate(lst, axis=-1)
+    out: np.ndarray = np.concatenate([X, Y], axis=-1)
 
     return out
 
