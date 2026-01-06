@@ -40,63 +40,18 @@ Equirec2Perspec is a Python library that converts equirectangular 360-degree pan
 
 ## Local Development Commands
 
-### Linting and Formatting
+See `CONTRIBUTING.md` for the complete development workflow and quality checks.
 
-Run all lint checks (used in CI):
+### Quick Reference
 ```bash
-./scripts/lint.sh
-```
+# Full quality check (lint + test)
+./scripts/lint.sh && ./scripts/test.sh
 
-Individual lint commands:
-```bash
-# Code style and error checking
-uv run ruff check
-
-# Code formatting check
-uv run ruff format --check
-
-# Auto-format code
-uv run ruff format
-
-# Type checking
-uv run mypy src/equirec2perspec
-```
-
-### Testing
-
-Run all tests with coverage:
-```bash
-./scripts/test.sh
-```
-
-Individual test commands:
-```bash
-# Basic test run
-uv run pytest
-
-# Run with coverage (like CI)
-uv run pytest --cov=src/equirec2perspec --cov-report=xml --cov-report=term-missing
-
-# Run specific test markers
-uv run pytest -m unit          # Unit tests only
-uv run pytest -m integration   # Integration tests only
-uv run pytest -m "not slow"    # Skip slow tests
-
-# Run specific test file
-uv run pytest tests/test_specific.py
-```
-
-### Building and Publishing
-
-```bash
-# Build package
-./scripts/build.sh
-
-# Build manually
-uv run build
-
-# Check package (before publishing)
-uv run twine check dist/*
+# Individual commands
+uv run ruff check          # Linting
+uv run ruff format         # Formatting
+uv run mypy src/equirec2perspec  # Type checking
+uv run pytest              # Testing
 ```
 
 ## Version Control
@@ -148,13 +103,7 @@ for version in 3.9 3.10 3.11 3.12; do
 done
 ```
 
-### Quality Gates
 
-- **Code Coverage**: Minimum 80% required to pass
-- **Type Checking**: All code must pass mypy strict mode
-- **Formatting**: Code must match ruff format standards
-- **Linting**: No ruff check errors allowed
-- **Tests**: All tests must pass across all supported Python versions
 
 ### Performance Optimization
 
@@ -190,7 +139,4 @@ Key math:
 
 Uses `src` layout with `hatchling` build backend. The package exports `Equirectangular` class via `__init__.py`.
 
-## Dependencies
 
-- **Required**: numpy, opencv-python
-- **Optional**: pyturbojpeg (auto-detected at runtime for faster JPEG decode)
