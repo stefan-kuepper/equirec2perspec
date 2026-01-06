@@ -47,10 +47,10 @@
   - Verify image has 3 channels (color)
 
 ### Remove Debug Code
-- [ ] Replace `print("Using TurboJPEG")` with proper logging (line 6)
-- [ ] Replace `print("USING opencv imread")` with proper logging (line 8)
-- [ ] Add Python logging module with configurable levels
-- [ ] Use logger.debug() for optional diagnostic output
+- [x] Replace `print("Using TurboJPEG")` with proper logging (line 6)
+- [x] Replace `print("USING opencv imread")` with proper logging (line 8)
+- [x] Add Python logging module with configurable levels
+- [x] Use logger.debug() for optional diagnostic output
 
 ---
 

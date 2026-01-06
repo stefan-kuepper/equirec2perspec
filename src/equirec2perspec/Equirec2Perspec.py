@@ -1,14 +1,17 @@
+import logging
 from importlib.util import find_spec
 
 import cv2
 import numpy as np
 
+logger = logging.getLogger(__name__)
+
 try:
     from turbojpeg import TurboJPEG
 
-    print("Using TurboJPEG")
+    logger.debug("Using TurboJPEG")
 except ImportError:
-    print("USING opencv imread")
+    logger.debug("USING opencv imread")
 
 
 def load_image(path):
