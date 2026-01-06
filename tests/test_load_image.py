@@ -41,33 +41,25 @@ class TestLoadImage:
                 # This is acceptable behavior for testing purposes
                 pass
 
-    @pytest.mark.skip(
-        reason="Test fails when TurboJPEG is installed - need to fix error handling"
-    )
     def test_load_image_file_not_found(self):
         """Test loading non-existent file raises appropriate error."""
         non_existent_file = "/path/to/non/existent/image.jpg"
 
-        with patch("importlib.util.find_spec") as mock_find_spec:
-            mock_find_spec.return_value = None  # Force OpenCV path
+        # Should raise FileNotFoundError when file doesn't exist
+        with pytest.raises(FileNotFoundError) as exc_info:
+            load_image(non_existent_file)
 
-            # With TurboJPEG installed, we need to force OpenCV to test this path
-            result = load_image(non_existent_file)
-            # Should return None when file not found
-            assert result is None
+        # Verify error message contains the path
+        assert non_existent_file in str(exc_info.value)
 
-    @pytest.mark.skip(
-        reason="Test fails when TurboJPEG is installed - need to fix error handling"
-    )
     def test_load_image_invalid_file(self, invalid_image_file):
         """Test loading invalid image file."""
-        with patch("importlib.util.find_spec") as mock_find_spec:
-            mock_find_spec.return_value = None  # Use OpenCV path
+        # Should raise ValueError for corrupted/unsupported files
+        with pytest.raises(ValueError) as exc_info:
+            load_image(invalid_image_file)
 
-            # OpenCV might return None for invalid files
-            result = load_image(invalid_image_file)
-            # The behavior depends on OpenCV version
-            assert result is not None or result is None
+        # Verify error message indicates format issue
+        assert "unsupported format or corrupted" in str(exc_info.value)
 
     @pytest.mark.skipif(
         not os.path.exists(
