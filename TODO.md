@@ -5,32 +5,6 @@
 
 ## 🔴 Critical Priority (Do First)
 
-### Testing Infrastructure
-- [x] Add `pytest` as development dependency to pyproject.toml
-- [x] Create `tests/` directory
-- [x] Write unit tests for `load_image()` function
-- [x] Write unit tests for `xyz2lonlat()` function
-- [x] Write unit tests for `lonlat2XY()` function
-- [x] Write unit tests for `GetPerspective()` method
-- [x] Write integration tests with sample images
-- [x] Add `pytest-cov` for coverage reporting
-- [x] Target minimum 80% code coverage
-- [x] Add coverage badge to README
-
-### CI/CD Pipeline
-- [x] Create `.github/workflows/` directory
-- [x] Add `ci.yml` workflow for automated testing
-  - [x] Test on Python 3.9, 3.10, 3.11, 3.12
-  - [x] Test on Ubuntu, macOS, Windows
-  - [x] Run linting checks
-  - [x] Run type checking
-  - [x] Generate coverage report
-- [x] Add `publish.yml` workflow for PyPI releases
-  - [x] Trigger on git tags
-  - [x] Build wheel and sdist
-  - [x] Publish to PyPI
-- [x] Add status badges to README
-
 ### Error Handling & Validation
 - [ ] Add error handling in `load_image()` (line 11-19)
   - Validate path exists
@@ -46,47 +20,17 @@
   - Check if image loaded successfully
   - Verify image has 3 channels (color)
 
-### Remove Debug Code
-- [x] Replace `print("Using TurboJPEG")` with proper logging (line 6)
-- [x] Replace `print("USING opencv imread")` with proper logging (line 8)
-- [x] Add Python logging module with configurable levels
-- [x] Use logger.debug() for optional diagnostic output
-
 ---
 
 ## 🟡 High Priority (Do Soon)
-
-### Code Quality Tools
-- [ ] Add `ruff` as development dependency
-- [ ] Create `ruff.toml` or add ruff config to `pyproject.toml`
-  - Configure line length (e.g., 100)
-  - Select rule sets (pycodestyle, pyflakes, etc.)
-- [ ] Run `ruff format` on entire codebase
-- [ ] Run `ruff check --fix` to auto-fix issues
-- [ ] Add `.ruff_cache/` to .gitignore
 
 ### Type Hints
 - [ ] Add return type hint to `load_image()` → `np.ndarray`
 - [ ] Add type hints to `xyz2lonlat()` parameters and return
 - [ ] Add type hints to `lonlat2XY()` parameters and return
 - [ ] Add docstring and types to `__init__()`
-- [x] Add `mypy` as development dependency
-- [x] Create `mypy.ini` configuration file
 - [ ] Create `py.typed` marker file in package
 - [ ] Run mypy and fix any type errors
-- [x] Add mypy to CI pipeline
-
-### Pre-commit Hooks
-- [ ] Add `pre-commit` as development dependency
-- [ ] Create `.pre-commit-config.yaml`
-  - Add ruff linting
-  - Add ruff formatting
-  - Add mypy type checking
-  - Add trailing whitespace check
-  - Add end-of-file fixer
-  - Add YAML validation
-- [ ] Run `pre-commit install`
-- [ ] Run `pre-commit run --all-files`
 
 ### Documentation
 - [ ] Add docstring to `load_image()` function
@@ -109,20 +53,6 @@
 
 ## 🟢 Medium Priority (Do When Possible)
 
-### Package Structure
-- [ ] Consider migrating to src-layout
-  - Move `equirec2perspec/` to `src/equirec2perspec/`
-  - Update pyproject.toml build configuration
-  - Update import statements
-- [ ] Rename `src/` directory to `examples/` or `assets/`
-  - More accurate name for image files
-  - Prevents confusion with src-layout
-- [ ] Create proper `examples/` directory
-  - Add example scripts (not just images)
-  - Add `basic_usage.py`
-  - Add `advanced_usage.py`
-  - Add `batch_processing.py`
-
 ### API Improvements
 - [ ] Consider renaming `GetPerspective()` to `get_perspective()`
   - Follow PEP 8 naming conventions (lowercase with underscores)
@@ -138,13 +68,12 @@
   def get_perspectives_batch(views: List[ViewParams]) -> List[np.ndarray]
   ```
 
-### Security & Best Practices
-- [ ] Add `bandit` for security linting
-- [ ] Add `safety` to check dependencies for vulnerabilities
-- [ ] Run security scans in CI
-- [ ] Add dependabot configuration for dependency updates
-- [ ] Consider adding image size limits to prevent memory issues
-- [ ] Add resource cleanup in error cases
+### Package Structure
+- [ ] Create proper `examples/` directory
+  - Add example scripts (not just images)
+  - Add `basic_usage.py`
+  - Add `advanced_usage.py`
+  - Add `batch_processing.py`
 
 ### Performance
 - [ ] Add benchmarks directory
@@ -174,18 +103,7 @@
 - [ ] Add preview/thumbnail generation
 - [ ] Consider adding GPU acceleration (CUDA)
 
-### Development Tools
-- [ ] Add `.editorconfig` for consistent formatting
-- [ ] Add VS Code workspace settings
-- [ ] Add PyCharm configuration
-- [ ] Create Docker development environment
-- [ ] Add Makefile for common tasks
-
 ### Community & Marketing
-- [ ] Add GitHub issue templates
-- [ ] Add PR template
-- [ ] Add GitHub Discussions
-- [ ] Submit to awesome-python lists
 - [ ] Write blog post about the library
 - [ ] Create demo video or GIF
 - [ ] Add to Python Package Index classifiers
@@ -196,23 +114,15 @@
 
 These can be done immediately for quick improvements:
 
-1. **Add logging module** (5 min)
-   - Import logging
-   - Replace print() with logger.debug()
-
-2. **Add basic input validation** (15 min)
+1. **Add basic input validation** (15 min)
    - Check FOV > 0
    - Check dimensions > 0
    - Raise ValueError with messages
 
-3. **Add missing docstrings** (20 min)
+2. **Add missing docstrings** (20 min)
    - Document all helper functions
    - Add parameter descriptions
 
-4. **Create basic CI workflow** (30 min)
-   - Simple GitHub Actions that runs tests
-   - Test on Python 3.9-3.12
-
-5. **Add ruff configuration** (10 min)
+3. **Add ruff configuration** (10 min)
    - Add to pyproject.toml
    - Run formatter
