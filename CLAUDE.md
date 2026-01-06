@@ -19,6 +19,10 @@ uv sync --extra turbojpeg
 source .venv/bin/activate
 ```
 
+## Version Control
+
+This project uses **jj (Jujutsu)** as its version control system. Use `jj` commands instead of `git`.
+
 ## Architecture
 
 The library follows a simple single-module design:
