@@ -5,6 +5,9 @@ description = "A library to project equirectangular panorama into perspective im
 authors = [
     {name = "Stefan Küpper", email = "stefan.kuepper@posteo.de"}
 ]
+maintainers = [
+    {name = "Stefan Küpper", email = "stefan.kuepper@posteo.de"}
+]
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
