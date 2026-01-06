@@ -1,0 +1,41 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":semanticCommitTypeAll(chore)"
+  ],
+  "timezone": "UTC",
+  "schedule": ["before 3am every weekday"],
+  "dependencyDashboard": true,
+  "labels": ["dependencies"],
+  "assignees": ["@stefan"],
+  "reviewers": ["@stefan"],
+  "python": {
+    "rangeStrategy": "bump"
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  },
+  "packageRules": [
+    {
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    },
+    {
+      "matchPackagePatterns": ["*"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "labels": ["security"],
+    "assignees": ["@stefan"],
+    "reviewers": ["@stefan"],
+    "schedule": ["at any time"]
+  }
+}
