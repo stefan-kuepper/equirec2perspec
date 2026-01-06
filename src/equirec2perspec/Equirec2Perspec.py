@@ -1,26 +1,19 @@
 import logging
-from importlib.util import find_spec
 from pathlib import Path
-from typing import TYPE_CHECKING, Optional, Tuple, Union
+from typing import Optional, Tuple, Union
 
 import cv2
 import numpy as np
 
 logger = logging.getLogger(__name__)
 
-if TYPE_CHECKING:
-    try:
-        from turbojpeg import TurboJPEG
-    except ImportError:
-        TurboJPEG = None
-else:
-    try:
-        from turbojpeg import TurboJPEG
+try:
+    from turbojpeg import TurboJPEG
 
-        logger.debug("Using TurboJPEG")
-    except ImportError:
-        logger.debug("USING opencv imread")
-        TurboJPEG = None
+    logger.debug("TurboJPEG available")
+except ImportError:
+    TurboJPEG = None
+    logger.debug("TurboJPEG not available, using OpenCV")
 
 
 def load_image(path: Union[str, Path]) -> np.ndarray:
@@ -51,7 +44,7 @@ def load_image(path: Union[str, Path]) -> np.ndarray:
     image: Optional[np.ndarray] = None
 
     try:
-        if find_spec("turbojpeg") is not None and TurboJPEG is not None:
+        if TurboJPEG is not None:
             tjpg = TurboJPEG()
             try:
                 with open(path_str, "rb") as img:

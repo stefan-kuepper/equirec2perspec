@@ -11,9 +11,7 @@ class TestLoadImage:
 
     def test_load_image_with_opencv(self, temp_image_file):
         """Test loading image with OpenCV when TurboJPEG is not available."""
-        with patch("importlib.util.find_spec") as mock_find_spec:
-            mock_find_spec.return_value = None  # TurboJPEG not available
-
+        with patch("equirec2perspec.Equirec2Perspec.TurboJPEG", None):
             image = load_image(temp_image_file)
 
             assert isinstance(image, np.ndarray)
@@ -24,13 +22,13 @@ class TestLoadImage:
         self, temp_image_file, mock_turbojpeg
     ):
         """Test logic when TurboJPEG is available (simplified test)."""
-        # This test just checks function works when find_spec returns truthy
-        # The actual TurboJPEG testing would require module to be installed
-        with patch("importlib.util.find_spec") as mock_find_spec:
-            mock_find_spec.return_value = Mock()  # TurboJPEG available
+        # This test uses the mock_turbojpeg fixture to simulate TurboJPEG being available
+        # The actual TurboJPEG testing would require the module to be installed
+        # Make the mock callable - TurboJPEG() should return the mock instance
+        mock_class = Mock(return_value=mock_turbojpeg)
 
-            # We expect this to fall back to OpenCV since TurboJPEG isn't actually installed
-            # but find_spec returns truthy, so it should try TurboJPEG path
+        with patch("equirec2perspec.Equirec2Perspec.TurboJPEG", mock_class):
+            # We're mocking it, so it should try the TurboJPEG path
             try:
                 image = load_image(temp_image_file)
                 # If it succeeds, verify it's a valid image
@@ -82,10 +80,8 @@ class TestLoadImage:
 
     def test_load_image_opencv_fallback(self, temp_image_file):
         """Test that OpenCV fallback works properly."""
-        with patch("importlib.util.find_spec") as mock_find_spec:
+        with patch("equirec2perspec.Equirec2Perspec.TurboJPEG", None):
             # Simulate TurboJPEG not being available
-            mock_find_spec.return_value = None
-
             image = load_image(temp_image_file)
 
             # Should use OpenCV and return a valid image
@@ -95,9 +91,8 @@ class TestLoadImage:
 
     def test_load_image_different_paths(self, temp_image_file):
         """Test load_image with different path scenarios."""
-        with patch("importlib.util.find_spec") as mock_find_spec:
-            mock_find_spec.return_value = None  # Force OpenCV path
-
+        with patch("equirec2perspec.Equirec2Perspec.TurboJPEG", None):
+            # Force OpenCV path
             # Test with absolute path
             abs_path = os.path.abspath(temp_image_file)
             image = load_image(abs_path)
