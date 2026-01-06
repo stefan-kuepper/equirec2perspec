@@ -156,12 +156,16 @@ class Equirectangular:
     ) -> None:
         """Exit context manager.
 
+        No cleanup is required as the image is stored in-memory as a NumPy array
+        and doesn't hold file handles or other system resources needing explicit
+        release. The image data will be garbage collected when this instance is
+        deleted.
+
         Args:
             exc_type: Exception type if an exception occurred
             exc_val: Exception value if an exception occurred
             exc_tb: Exception traceback if an exception occurred
         """
-        # No cleanup needed as we don't hold any external resources
         pass
 
     def get_perspective(
