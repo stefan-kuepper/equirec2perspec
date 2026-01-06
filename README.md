@@ -16,11 +16,11 @@ This tool addresses the need to extract perspective views from 360-degree panora
 
 ### Input: Equirectangular Panorama
 Given an input of 360 degree panorama:
-<center><img src="src/image.jpg"></center>
+<center><img src="images/image.jpg"></center>
 
 ### Output: Perspective View
 Split panorama into perspective view with given parameters:
-<center><img src="src/perspective.jpg"></center>
+<center><img src="images/perspective.jpg"></center>
 
 ## Key Features
 
@@ -103,7 +103,7 @@ import Equirec2Perspec as E2P
 
 if __name__ == '__main__':
     # Load equirectangular image
-    equ = E2P.Equirectangular('src/image.jpg')
+    equ = E2P.Equirectangular('images/image.jpg')
 
     # Extract perspective view
     # FOV: 60 degrees
@@ -211,7 +211,7 @@ equirec2perspec/
 ├── equirec2perspec/          # Main package directory
 │   ├── __init__.py           # Package initialization
 │   └── Equirec2Perspec.py    # Core conversion implementation
-├── src/                      # Example images
+├── images/                      # Example images
 │   ├── image.jpg             # Sample equirectangular panorama
 │   └── perspective.jpg       # Sample perspective output
 ├── pyproject.toml            # Package configuration
@@ -240,4 +240,3 @@ Original work Copyright (c) 2021 Fu-En Wang
 ## Repository
 
 https://github.com/stefan-kuepper/equirec2perspec
-
