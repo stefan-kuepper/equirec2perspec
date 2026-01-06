@@ -30,6 +30,8 @@ Split panorama into perspective view with given parameters:
 ## Key Features
 
 - **Equirectangular to Perspective Conversion**: Transform 360° panoramas into standard perspective images
+- **PEP 8 Compliant API**: Method names follow Python conventions (`get_perspective`)
+- **Context Manager Support**: Automatic resource management with `with` statement
 - **Flexible View Control**: Specify exact viewing direction using theta (horizontal) and phi (vertical) angles
 - **Adjustable Field of View**: Control the FOV to simulate different lens characteristics
 - **Custom Output Dimensions**: Define output image height and width
@@ -115,15 +117,27 @@ if __name__ == '__main__':
     # theta: 0 degrees (center horizontally - z-axis rotation)
     # phi: 0 degrees (center vertically - y-axis rotation)
     # Output: 720x1080 pixels (height, width)
-    img = equ.GetPerspective(60, 0, 0, 720, 1080)
+    img = equ.get_perspective(60, 0, 0, 720, 1080)
 
     # Save or display the result
     cv2.imwrite('output.jpg', img)
 ```
 
+### Using Context Manager (Recommended)
+```python
+import cv2
+import Equirec2Perspec as E2P
+
+if __name__ == '__main__':
+    # Load and automatically manage resources
+    with E2P.Equirectangular('images/image.jpg') as equ:
+        img = equ.get_perspective(60, 0, 0, 720, 1080)
+        cv2.imwrite('output.jpg', img)
+```
+
 ### Parameter Reference
 
-**`GetPerspective(FOV, THETA, PHI, height, width, interpolation=cv2.INTER_CUBIC)`**
+**`get_perspective(FOV, THETA, PHI, height, width, interpolation=cv2.INTER_CUBIC)`**
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -152,22 +166,22 @@ import Equirec2Perspec as E2P
 equ = E2P.Equirectangular('panorama.jpg')
 
 # Look right at 45 degrees
-right_view = equ.GetPerspective(60, 45, 0, 720, 1080)
+right_view = equ.get_perspective(60, 45, 0, 720, 1080)
 
 # Look up at 30 degrees
-up_view = equ.GetPerspective(60, 0, 30, 720, 1080)
+up_view = equ.get_perspective(60, 0, 30, 720, 1080)
 
 # Look down-left (combining angles)
-down_left_view = equ.GetPerspective(60, -45, -20, 720, 1080)
+down_left_view = equ.get_perspective(60, -45, -20, 720, 1080)
 
 # Wide angle view (90 degrees FOV)
-wide_view = equ.GetPerspective(90, 0, 0, 720, 1080)
+wide_view = equ.get_perspective(90, 0, 0, 720, 1080)
 
 # Narrow telephoto view (30 degrees FOV)
-tele_view = equ.GetPerspective(30, 0, 0, 720, 1080)
+tele_view = equ.get_perspective(30, 0, 0, 720, 1080)
 
 # High-quality interpolation for final output
-hq_view = equ.GetPerspective(60, 0, 0, 1080, 1920, cv2.INTER_LANCZOS4)
+hq_view = equ.get_perspective(60, 0, 0, 1080, 1920, cv2.INTER_LANCZOS4)
 ```
 
 ## Technical Implementation

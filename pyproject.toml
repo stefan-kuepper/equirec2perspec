@@ -1,6 +1,6 @@
 [project]
 name = "equirec2perspec"
-version = "0.1.0"
+version = "0.2.0"
 description = "A library to project equirectangular panorama into perspective images"
 authors = [
     {name = "Stefan Küpper", email = "stefan.kuepper@posteo.de"}

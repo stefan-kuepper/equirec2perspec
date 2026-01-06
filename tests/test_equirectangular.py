@@ -29,20 +29,20 @@ class TestEquirectangular:
                 Equirectangular("invalid_path.jpg")
 
     def test_get_perspective_basic(self, mock_image):
-        """Test basic GetPerspective functionality."""
+        """Test basic get_perspective functionality."""
         with patch("equirec2perspec.Equirec2Perspec.load_image") as mock_load:
             mock_load.return_value = mock_image
 
             equ = Equirectangular("dummy_path.jpg")
 
             # Test basic perspective extraction
-            result = equ.GetPerspective(60, 0, 0, 100, 200)
+            result = equ.get_perspective(60, 0, 0, 100, 200)
 
             assert isinstance(result, np.ndarray)
             assert result.shape == (100, 200, 3)  # height, width, channels
 
     def test_get_perspective_different_parameters(self, mock_image):
-        """Test GetPerspective with different parameter combinations."""
+        """Test get_perspective with different parameter combinations."""
         with patch("equirec2perspec.Equirec2Perspec.load_image") as mock_load:
             mock_load.return_value = mock_image
 
@@ -57,11 +57,11 @@ class TestEquirectangular:
             ]
 
             for fov, theta, phi, height, width in test_cases:
-                result = equ.GetPerspective(fov, theta, phi, height, width)
+                result = equ.get_perspective(fov, theta, phi, height, width)
                 assert result.shape == (height, width, 3)
 
     def test_get_perspective_interpolation_methods(self, mock_image):
-        """Test GetPerspective with different interpolation methods."""
+        """Test get_perspective with different interpolation methods."""
         import cv2
 
         with patch("equirec2perspec.Equirec2Perspec.load_image") as mock_load:
@@ -77,11 +77,11 @@ class TestEquirectangular:
             ]
 
             for method in interpolation_methods:
-                result = equ.GetPerspective(60, 0, 0, 100, 200, method)
+                result = equ.get_perspective(60, 0, 0, 100, 200, method)
                 assert result.shape == (100, 200, 3)
 
     def test_get_perspective_extreme_angles(self, mock_image):
-        """Test GetPerspective with extreme viewing angles."""
+        """Test get_perspective with extreme viewing angles."""
         with patch("equirec2perspec.Equirec2Perspec.load_image") as mock_load:
             mock_load.return_value = mock_image
 
@@ -96,11 +96,11 @@ class TestEquirectangular:
             ]
 
             for fov, theta, phi, height, width in extreme_cases:
-                result = equ.GetPerspective(fov, theta, phi, height, width)
+                result = equ.get_perspective(fov, theta, phi, height, width)
                 assert result.shape == (height, width, 3)
 
     def test_get_perspective_fov_validation(self, mock_image):
-        """Test GetPerspective FOV parameter validation."""
+        """Test get_perspective FOV parameter validation."""
         with patch("equirec2perspec.Equirec2Perspec.load_image") as mock_load:
             mock_load.return_value = mock_image
 
@@ -115,24 +115,26 @@ class TestEquirectangular:
             ]
 
             for fov, theta, phi, height, width in valid_fov_test_cases:
-                result = equ.GetPerspective(fov, theta, phi, height, width)
+                result = equ.get_perspective(fov, theta, phi, height, width)
                 assert result.shape == (height, width, 3)
 
             # Test invalid FOV values
             invalid_fov_test_cases = [
                 0.1,  # Below minimum
-                0,    # Zero
+                0,  # Zero
                 -10,  # Negative
                 181,  # Above maximum
                 200,  # Way too large
             ]
 
             for invalid_fov in invalid_fov_test_cases:
-                with pytest.raises(ValueError, match="FOV must be between 1 and 180 degrees"):
-                    equ.GetPerspective(invalid_fov, 0, 0, 100, 200)
+                with pytest.raises(
+                    ValueError, match="FOV must be between 1 and 180 degrees"
+                ):
+                    equ.get_perspective(invalid_fov, 0, 0, 100, 200)
 
     def test_get_perspective_dimension_validation(self, mock_image):
-        """Test GetPerspective dimension parameter validation."""
+        """Test get_perspective dimension parameter validation."""
         with patch("equirec2perspec.Equirec2Perspec.load_image") as mock_load:
             mock_load.return_value = mock_image
 
@@ -148,11 +150,11 @@ class TestEquirectangular:
             ]
 
             for fov, theta, phi, height, width in dimension_test_cases:
-                result = equ.GetPerspective(fov, theta, phi, height, width)
+                result = equ.get_perspective(fov, theta, phi, height, width)
                 assert result.shape == (height, width, 3)
 
     def test_get_perspective_mathematical_consistency(self, mock_image):
-        """Test that GetPerspective produces mathematically consistent results."""
+        """Test that get_perspective produces mathematically consistent results."""
         with patch("equirec2perspec.Equirec2Perspec.load_image") as mock_load:
             # Create a test pattern with known colors at specific positions
             test_image = np.zeros((512, 1024, 3), dtype=np.uint8)
@@ -164,7 +166,7 @@ class TestEquirectangular:
             equ = Equirectangular("dummy_path.jpg")
 
             # Extract perspective looking at center
-            result = equ.GetPerspective(60, 0, 0, 100, 200)
+            result = equ.get_perspective(60, 0, 0, 100, 200)
 
             # The result should be a valid image
             assert isinstance(result, np.ndarray)
@@ -172,29 +174,29 @@ class TestEquirectangular:
             assert np.all(result >= 0) and np.all(result <= 255)
 
     def test_get_perspective_repeatability(self, mock_image):
-        """Test that GetPerspective produces identical results for same parameters."""
+        """Test that get_perspective produces identical results for same parameters."""
         with patch("equirec2perspec.Equirec2Perspec.load_image") as mock_load:
             mock_load.return_value = mock_image
 
             equ = Equirectangular("dummy_path.jpg")
 
             # Extract perspective twice with same parameters
-            result1 = equ.GetPerspective(60, 45, 30, 100, 200)
-            result2 = equ.GetPerspective(60, 45, 30, 100, 200)
+            result1 = equ.get_perspective(60, 45, 30, 100, 200)
+            result2 = equ.get_perspective(60, 45, 30, 100, 200)
 
             # Results should be identical
             np.testing.assert_array_equal(result1, result2)
 
     def test_get_perspective_different_views(self, mock_image):
-        """Test that GetPerspective produces different results for different parameters."""
+        """Test that get_perspective produces different results for different parameters."""
         with patch("equirec2perspec.Equirec2Perspec.load_image") as mock_load:
             mock_load.return_value = mock_image
 
             equ = Equirectangular("dummy_path.jpg")
 
             # Extract perspective with different parameters
-            result1 = equ.GetPerspective(60, 0, 0, 100, 200)  # Front view
-            result2 = equ.GetPerspective(60, 90, 0, 100, 200)  # Right view
+            result1 = equ.get_perspective(60, 0, 0, 100, 200)  # Front view
+            result2 = equ.get_perspective(60, 90, 0, 100, 200)  # Right view
 
             # Results should be different (unless the image is uniform)
             assert not np.array_equal(result1, result2)
@@ -209,7 +211,7 @@ class TestEquirectangular:
             equ = Equirectangular("dummy_path.jpg")
 
             # Test with known FOV and dimensions
-            result = equ.GetPerspective(60, 0, 0, 100, 200)
+            result = equ.get_perspective(60, 0, 0, 100, 200)
 
             # The result should be valid
             assert result.shape == (100, 200, 3)
@@ -222,14 +224,14 @@ class TestEquirectangular:
         reason="Sample image not available",
     )
     def test_get_perspective_with_real_image(self, sample_panorama_path):
-        """Test GetPerspective with real panorama image."""
+        """Test get_perspective with real panorama image."""
         if not os.path.exists(sample_panorama_path):
             pytest.skip("Sample panorama image not found")
 
         equ = Equirectangular(sample_panorama_path)
 
         # Test basic perspective extraction
-        result = equ.GetPerspective(60, 0, 0, 720, 1080)
+        result = equ.get_perspective(60, 0, 0, 720, 1080)
 
         assert isinstance(result, np.ndarray)
         assert result.shape == (720, 1080, 3)

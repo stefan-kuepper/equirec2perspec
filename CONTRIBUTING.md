@@ -55,8 +55,10 @@ uv run pytest --cov=src/equirec2perspec --cov-report=term-missing
 
 ### Architecture
 - Single-module design in `src/equirec2perspec/Equirec2Perspec.py`
-- Core class: `Equirectangular` with `GetPerspective()` method
+- Core class: `Equirectangular` with `get_perspective()` method
+- Context manager support with `__enter__()` and `__exit__()` methods
 - Coordinate utilities: `xyz2lonlat()`, `lonlat2XY()`
+- Helper functions with comprehensive docstrings
 
 ### Performance Guidelines
 - Prefer vectorized NumPy operations

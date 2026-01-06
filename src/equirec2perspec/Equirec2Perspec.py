@@ -58,7 +58,9 @@ def load_image(path: Union[str, Path]) -> np.ndarray:
                 with open(path_str, "rb") as img:
                     image = tjpg.decode(img.read())
             except Exception as e:
-                raise ValueError(f"Failed to decode image with TurboJPEG: {path}") from e
+                raise ValueError(
+                    f"Failed to decode image with TurboJPEG: {path}"
+                ) from e
         else:
             image = cv2.imread(path_str, cv2.IMREAD_COLOR)
     except (OSError, IOError) as e:
@@ -66,12 +68,23 @@ def load_image(path: Union[str, Path]) -> np.ndarray:
 
     # Validate image was decoded successfully
     if image is None:
-        raise ValueError(f"Failed to decode image (unsupported format or corrupted file): {path}")
+        raise ValueError(
+            f"Failed to decode image (unsupported format or corrupted file): {path}"
+        )
 
     return image
 
 
 def xyz2lonlat(xyz: np.ndarray) -> np.ndarray:
+    """Convert 3D Cartesian coordinates to spherical longitude/latitude.
+
+    Args:
+        xyz: Array of 3D Cartesian coordinates with shape (..., 3)
+
+    Returns:
+        Array of spherical coordinates (longitude, latitude) with shape (..., 2)
+        where longitude is in [-π, π] and latitude is in [-π/2, π/2]
+    """
     atan2 = np.arctan2
     asin = np.arcsin
 
@@ -90,6 +103,15 @@ def xyz2lonlat(xyz: np.ndarray) -> np.ndarray:
 
 
 def lonlat2XY(lonlat: np.ndarray, shape: Tuple[int, int, int]) -> np.ndarray:
+    """Convert spherical longitude/latitude to image pixel coordinates.
+
+    Args:
+        lonlat: Array of spherical coordinates (longitude, latitude) with shape (..., 2)
+        shape: Shape of the target equirectangular image (height, width, channels)
+
+    Returns:
+        Array of pixel coordinates (X, Y) with shape (..., 2) suitable for cv2.remap
+    """
     X = (lonlat[..., 0:1] / (2 * np.pi) + 0.5) * (shape[1] - 1)
     Y = (lonlat[..., 1:] / (np.pi) + 0.5) * (shape[0] - 1)
     lst = [X, Y]
@@ -122,7 +144,31 @@ class Equirectangular:
 
         [self._height, self._width, _] = self._img.shape
 
-    def GetPerspective(
+    def __enter__(self) -> "Equirectangular":
+        """Enter context manager.
+
+        Returns:
+            Self reference for context manager usage
+        """
+        return self
+
+    def __exit__(
+        self,
+        exc_type: Optional[BaseException],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[object],
+    ) -> None:
+        """Exit context manager.
+
+        Args:
+            exc_type: Exception type if an exception occurred
+            exc_val: Exception value if an exception occurred
+            exc_tb: Exception traceback if an exception occurred
+        """
+        # No cleanup needed as we don't hold any external resources
+        pass
+
+    def get_perspective(
         self,
         FOV: float,
         THETA: float,
@@ -131,7 +177,7 @@ class Equirectangular:
         width: int,
         interpolation: int = cv2.INTER_CUBIC,
     ) -> np.ndarray:
-        """Split equirectangular panorama into normal perspective view
+        """Split equirectangular panorama into normal perspective view.
 
         Args:
             FOV (float): Field of view in degrees (must be between 1 and 180)
@@ -146,12 +192,22 @@ class Equirectangular:
 
         Raises:
             ValueError: If any input parameter is out of valid range
+
+        Example:
+            >>> import equirec2perspec
+            >>> # Load panorama and extract perspective view
+            >>> with equirec2perspec.Equirectangular('panorama.jpg') as equ:
+            ...     perspective = equ.get_perspective(60, 0, 0, 720, 1080)
+            ...     # Extract front view (60° FOV)
+            ...     front_view = equ.get_perspective(60, 0, 0, 720, 1080)
+            ...     # Extract right view (90° FOV, looking 90° to the right)
+            ...     right_view = equ.get_perspective(90, 90, 0, 720, 1080)
+            ...     # Extract up view (45° FOV, looking 30° up)
+            ...     up_view = equ.get_perspective(45, 0, -30, 720, 1080)
         """
         # Validate FOV range
         if not (1 <= FOV <= 180):
-            raise ValueError(
-                f"FOV must be between 1 and 180 degrees, got: {FOV}"
-            )
+            raise ValueError(f"FOV must be between 1 and 180 degrees, got: {FOV}")
 
         # Validate THETA range
         if not (-180 <= THETA <= 180):
@@ -161,20 +217,14 @@ class Equirectangular:
 
         # Validate PHI range
         if not (-90 <= PHI <= 90):
-            raise ValueError(
-                f"PHI must be between -90 and 90 degrees, got: {PHI}"
-            )
+            raise ValueError(f"PHI must be between -90 and 90 degrees, got: {PHI}")
 
         # Validate output dimensions
         if height <= 0:
-            raise ValueError(
-                f"height must be greater than 0, got: {height}"
-            )
+            raise ValueError(f"height must be greater than 0, got: {height}")
 
         if width <= 0:
-            raise ValueError(
-                f"width must be greater than 0, got: {width}"
-            )
+            raise ValueError(f"width must be greater than 0, got: {width}")
 
         f = 0.5 * width * 1 / np.tan(0.5 * FOV / 180.0 * np.pi)
         cx = (width - 1) / 2.0

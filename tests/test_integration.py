@@ -35,7 +35,7 @@ class TestIntegration:
 
         results = []
         for fov, theta, phi, height, width in views:
-            result = equ.GetPerspective(fov, theta, phi, height, width)
+            result = equ.get_perspective(fov, theta, phi, height, width)
 
             # Validate each result
             assert isinstance(result, np.ndarray)
@@ -69,7 +69,7 @@ class TestIntegration:
         results = []
 
         for fov in fov_values:
-            result = equ.GetPerspective(fov, 0, 0, 480, 640)
+            result = equ.get_perspective(fov, 0, 0, 480, 640)
             results.append(result)
 
             assert result.shape == (480, 640, 3)
@@ -101,7 +101,7 @@ class TestIntegration:
         ]
 
         for height, width in dimensions:
-            result = equ.GetPerspective(60, 0, 0, height, width)
+            result = equ.get_perspective(60, 0, 0, height, width)
 
             assert result.shape == (height, width, 3)
             assert isinstance(result, np.ndarray)
@@ -131,7 +131,7 @@ class TestIntegration:
 
         results = {}
         for method, name in interpolation_methods:
-            result = equ.GetPerspective(60, 0, 0, 480, 640, interpolation=method)
+            result = equ.get_perspective(60, 0, 0, 480, 640, interpolation=method)
             results[name] = result
 
             assert result.shape == (480, 640, 3)
@@ -175,7 +175,7 @@ class TestIntegration:
                 equ = Equirectangular(tmp_file.name)
 
                 # Extract perspective views
-                result = equ.GetPerspective(60, 0, 0, 200, 400)
+                result = equ.get_perspective(60, 0, 0, 200, 400)
 
                 assert isinstance(result, np.ndarray)
                 assert result.shape == (200, 400, 3)
@@ -202,15 +202,15 @@ class TestIntegration:
                 equ = Equirectangular(tmp_file.name)
 
                 # Test with minimal output dimensions
-                result = equ.GetPerspective(60, 0, 0, 1, 1)
+                result = equ.get_perspective(60, 0, 0, 1, 1)
                 assert result.shape == (1, 1, 3)
 
                 # Test with very large FOV
-                result = equ.GetPerspective(179, 0, 0, 100, 100)
+                result = equ.get_perspective(179, 0, 0, 100, 100)
                 assert result.shape == (100, 100, 3)
 
                 # Test with extreme angles
-                result = equ.GetPerspective(60, 180, 90, 50, 50)
+                result = equ.get_perspective(60, 180, 90, 50, 50)
                 assert result.shape == (50, 50, 3)
 
             finally:
@@ -230,7 +230,7 @@ class TestIntegration:
                 equ = Equirectangular(tmp_file.name)
 
                 # Test with large output dimensions
-                result = equ.GetPerspective(60, 0, 0, 1080, 1920)
+                result = equ.get_perspective(60, 0, 0, 1080, 1920)
 
                 assert result.shape == (1080, 1920, 3)
                 assert isinstance(result, np.ndarray)
@@ -261,7 +261,7 @@ class TestIntegration:
                 times = []
                 for _ in range(5):
                     start_time = time.time()
-                    equ.GetPerspective(60, 0, 0, 480, 640)
+                    equ.get_perspective(60, 0, 0, 480, 640)
                     end_time = time.time()
                     times.append(end_time - start_time)
 

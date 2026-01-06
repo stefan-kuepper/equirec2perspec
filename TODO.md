@@ -11,7 +11,7 @@
   - Handle file read errors
   - Handle image decode errors
   - Provide clear error messages
-- [x] Add input validation in `GetPerspective()` (line 53-95)
+- [x] Add input validation in `get_perspective()` (line 53-95)
   - Validate FOV range (e.g., 1-180 degrees)
   - Validate THETA and PHI ranges
   - Validate height > 0 and width > 0
@@ -25,12 +25,12 @@
 ## 🟡 High Priority (Do Soon)
 
 ### Documentation
-- [ ] Add docstring to `load_image()` function
-- [ ] Add docstring to `xyz2lonlat()` function
-- [ ] Add docstring to `lonlat2XY()` function
-- [ ] Add docstring to `__init__()` method
-- [ ] Improve docstring in `GetPerspective()` with examples
-- [ ] Use consistent docstring style (Google or NumPy)
+- [x] Add docstring to `load_image()` function
+- [x] Add docstring to `xyz2lonlat()` function
+- [x] Add docstring to `lonlat2XY()` function
+- [x] Add docstring to `__init__()` method
+- [x] Improve docstring in `get_perspective()` with examples
+- [x] Use consistent docstring style (Google or NumPy)
 - [ ] Create `CONTRIBUTING.md`
   - Development setup instructions
   - How to run tests
@@ -46,11 +46,11 @@
 ## 🟢 Medium Priority (Do When Possible)
 
 ### API Improvements
-- [ ] Consider renaming `GetPerspective()` to `get_perspective()`
+- [x] Rename `GetPerspective()` to `get_perspective()`
   - Follow PEP 8 naming conventions (lowercase with underscores)
-  - Add deprecation warning for old name
+  - Complete removal of old method (user requested)
   - Update documentation
-- [ ] Add context manager support to `Equirectangular` class
+- [x] Add context manager support to `Equirectangular` class
   ```python
   with Equirectangular('image.jpg') as equ:
       img = equ.get_perspective(60, 0, 0, 720, 1080)

@@ -117,7 +117,8 @@ done
 The library follows a simple single-module design:
 
 - **`src/equirec2perspec/Equirec2Perspec.py`**: Core implementation containing:
-  - `Equirectangular` class: Main interface that loads panorama and provides `GetPerspective()` method
+  - `Equirectangular` class: Main interface that loads panorama and provides `get_perspective()` method
+  - Context manager support with `__enter__()` and `__exit__()` methods
   - `load_image()`: Image loading with automatic TurboJPEG detection
   - `xyz2lonlat()` / `lonlat2XY()`: Coordinate transformation utilities
 
