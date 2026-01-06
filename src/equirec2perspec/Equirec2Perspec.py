@@ -36,6 +36,7 @@ def load_image(path: Union[str, Path]) -> Optional[np.ndarray]:
     """
     path_str = str(path)
 
+    image: Optional[np.ndarray]
     if find_spec("turbojpeg") is not None and TurboJPEG is not None:
         tjpg = TurboJPEG()
         with open(path_str, "rb") as img:
@@ -60,7 +61,7 @@ def xyz2lonlat(xyz: np.ndarray) -> np.ndarray:
     lat = asin(y)
     lst = [lon, lat]
 
-    out = np.concatenate(lst, axis=-1)
+    out: np.ndarray = np.concatenate(lst, axis=-1)
     return out
 
 
@@ -68,7 +69,7 @@ def lonlat2XY(lonlat: np.ndarray, shape: Tuple[int, int, int]) -> np.ndarray:
     X = (lonlat[..., 0:1] / (2 * np.pi) + 0.5) * (shape[1] - 1)
     Y = (lonlat[..., 1:] / (np.pi) + 0.5) * (shape[0] - 1)
     lst = [X, Y]
-    out = np.concatenate(lst, axis=-1)
+    out: np.ndarray = np.concatenate(lst, axis=-1)
 
     return out
 
@@ -80,10 +81,14 @@ class Equirectangular:
         Args:
             img_name: Path to the equirectangular panorama image
 
+        Raises:
+            AttributeError: If the image fails to load
+
         """
-        self._img = load_image(img_name)
-        if self._img is None:
+        img = load_image(img_name)
+        if img is None:
             raise AttributeError(f"Failed to load image: {img_name}")
+        self._img: np.ndarray = img
         [self._height, self._width, _] = self._img.shape
 
     def GetPerspective(
