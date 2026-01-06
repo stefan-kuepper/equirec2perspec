@@ -24,14 +24,6 @@
 
 ## 🟡 High Priority (Do Soon)
 
-### Type Hints
-- [ ] Add return type hint to `load_image()` → `np.ndarray`
-- [ ] Add type hints to `xyz2lonlat()` parameters and return
-- [ ] Add type hints to `lonlat2XY()` parameters and return
-- [ ] Add docstring and types to `__init__()`
-- [ ] Create `py.typed` marker file in package
-- [ ] Run mypy and fix any type errors
-
 ### Documentation
 - [ ] Add docstring to `load_image()` function
 - [ ] Add docstring to `xyz2lonlat()` function
