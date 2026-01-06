@@ -42,11 +42,3 @@ jobs:
         env:
           PYTHON_VERSION: ${{ matrix.python-version }}
           COVERAGE: "true"
-
-      - name: Upload coverage to Codecov
-        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
-        uses: codecov/codecov-action@v4
-        with:
-          file: ./coverage.xml
-          flags: unittests
-          name: codecov-umbrella

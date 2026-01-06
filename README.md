@@ -1,7 +1,6 @@
 # Equirec2Perspec
 
 [![CI](https://github.com/stefan-kuepper/equirec2perspec/workflows/CI/badge.svg)](https://github.com/stefan-kuepper/equirec2perspec/actions)
-[![codecov](https://codecov.io/gh/stefan-kuepper/equirec2perspec/branch/main/graph/badge.svg)](https://codecov.io/gh/stefan-kuepper/equirec2perspec)
 [![PyPI version](https://badge.fury.io/py/equirec2perspec.svg)](https://badge.fury.io/py/equirec2perspec)
 [![Python versions](https://img.shields.io/pypi/pyversions/equirec2perspec.svg)](https://pypi.org/pypi/equirec2perspec)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
