@@ -2,6 +2,59 @@
 ## Introduction
 <strong>Equirec2Perspec</strong> is a python tool to split equirectangular panorama into normal perspective view.
 
+## Installation
+
+This project uses [uv](https://github.com/astral-sh/uv) for fast, reliable Python package management.
+
+### Installing uv
+
+```bash
+# On macOS and Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# On Windows
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+### Installing the package
+
+```bash
+# Install from PyPI (when published)
+uv pip install equirec2perspec
+
+# Or install from source
+git clone https://github.com/stefan-kuepper/equirec2perspec.git
+cd equirec2perspec
+uv sync
+```
+
+### Optional dependencies
+
+To install with TurboJPEG support for faster JPEG processing:
+
+```bash
+uv sync --extra turbojpeg
+```
+
+## Development
+
+```bash
+# Clone the repository
+git clone https://github.com/stefan-kuepper/equirec2perspec.git
+cd equirec2perspec
+
+# Install dependencies and create virtual environment
+uv sync
+
+# Activate the virtual environment
+source .venv/bin/activate  # On Linux/macOS
+# or
+.venv\Scripts\activate  # On Windows
+
+# Run your code
+python your_script.py
+```
+
 ## Panorama
 Given an input of 360 degree panorama
 <center><img src="src/image.jpg"></center>
