@@ -106,17 +106,30 @@ class TestEquirectangular:
 
             equ = Equirectangular("dummy_path.jpg")
 
-            # Test FOV boundaries (current implementation doesn't validate, but should handle gracefully)
-            fov_test_cases = [
-                (1, 0, 0, 100, 200),  # Very narrow FOV
+            # Test valid FOV boundaries
+            valid_fov_test_cases = [
+                (1, 0, 0, 100, 200),  # Minimum valid FOV
+                (90, 0, 0, 100, 200),  # Typical FOV
                 (179, 0, 0, 100, 200),  # Very wide FOV
-                (0.1, 0, 0, 100, 200),  # Extremely narrow
                 (180, 0, 0, 100, 200),  # Maximum FOV
             ]
 
-            for fov, theta, phi, height, width in fov_test_cases:
+            for fov, theta, phi, height, width in valid_fov_test_cases:
                 result = equ.GetPerspective(fov, theta, phi, height, width)
                 assert result.shape == (height, width, 3)
+
+            # Test invalid FOV values
+            invalid_fov_test_cases = [
+                0.1,  # Below minimum
+                0,    # Zero
+                -10,  # Negative
+                181,  # Above maximum
+                200,  # Way too large
+            ]
+
+            for invalid_fov in invalid_fov_test_cases:
+                with pytest.raises(ValueError, match="FOV must be between 1 and 180 degrees"):
+                    equ.GetPerspective(invalid_fov, 0, 0, 100, 200)
 
     def test_get_perspective_dimension_validation(self, mock_image):
         """Test GetPerspective dimension parameter validation."""

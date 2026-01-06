@@ -24,25 +24,49 @@ else:
     TurboJPEG = None
 
 
-def load_image(path: Union[str, Path]) -> Optional[np.ndarray]:
+def load_image(path: Union[str, Path]) -> np.ndarray:
     """Load an image from file path, supporting both str and Path objects.
 
     Args:
         path: Path to the image file
 
     Returns:
-        Loaded image as numpy array, or None if loading fails
+        Loaded image as numpy array
+
+    Raises:
+        FileNotFoundError: If the image file does not exist
+        ValueError: If the image file cannot be decoded or is invalid
+        IOError: If the image file cannot be read
 
     """
-    path_str = str(path)
+    path_obj = Path(path)
 
-    image: Optional[np.ndarray]
-    if find_spec("turbojpeg") is not None and TurboJPEG is not None:
-        tjpg = TurboJPEG()
-        with open(path_str, "rb") as img:
-            image = tjpg.decode(img.read())
-    else:
-        image = cv2.imread(path_str, cv2.IMREAD_COLOR)
+    # Validate path exists
+    if not path_obj.exists():
+        raise FileNotFoundError(f"Image file not found: {path}")
+
+    if not path_obj.is_file():
+        raise ValueError(f"Path is not a file: {path}")
+
+    path_str = str(path)
+    image: Optional[np.ndarray] = None
+
+    try:
+        if find_spec("turbojpeg") is not None and TurboJPEG is not None:
+            tjpg = TurboJPEG()
+            try:
+                with open(path_str, "rb") as img:
+                    image = tjpg.decode(img.read())
+            except Exception as e:
+                raise ValueError(f"Failed to decode image with TurboJPEG: {path}") from e
+        else:
+            image = cv2.imread(path_str, cv2.IMREAD_COLOR)
+    except (OSError, IOError) as e:
+        raise IOError(f"Failed to read image file: {path}") from e
+
+    # Validate image was decoded successfully
+    if image is None:
+        raise ValueError(f"Failed to decode image (unsupported format or corrupted file): {path}")
 
     return image
 
@@ -82,13 +106,20 @@ class Equirectangular:
             img_name: Path to the equirectangular panorama image
 
         Raises:
-            AttributeError: If the image fails to load
+            FileNotFoundError: If the image file does not exist
+            ValueError: If the image file is invalid or does not have 3 color channels
+            IOError: If the image file cannot be read
 
         """
         img = load_image(img_name)
-        if img is None:
-            raise AttributeError(f"Failed to load image: {img_name}")
         self._img: np.ndarray = img
+
+        # Verify image has 3 channels (color)
+        if len(self._img.shape) != 3 or self._img.shape[2] != 3:
+            raise ValueError(
+                f"Image must have 3 color channels (RGB), got shape: {self._img.shape}"
+            )
+
         [self._height, self._width, _] = self._img.shape
 
     def GetPerspective(
@@ -103,16 +134,47 @@ class Equirectangular:
         """Split equirectangular panorama into normal perspective view
 
         Args:
-            FOV (float): Field of view
-            THETA (float): left/right angle in degrees
-            PHI (float):  up/down angle in degrees
-            height (int): output image height
-            width (int): output image width
+            FOV (float): Field of view in degrees (must be between 1 and 180)
+            THETA (float): left/right angle in degrees (horizontal rotation, -180 to 180)
+            PHI (float): up/down angle in degrees (vertical rotation, -90 to 90)
+            height (int): output image height (must be > 0)
+            width (int): output image width (must be > 0)
             interpolation (_type_, optional): see cv2.remap. Defaults to cv2.INTER_CUBIC.
 
         Returns:
             np.ndarray: perspective view
+
+        Raises:
+            ValueError: If any input parameter is out of valid range
         """
+        # Validate FOV range
+        if not (1 <= FOV <= 180):
+            raise ValueError(
+                f"FOV must be between 1 and 180 degrees, got: {FOV}"
+            )
+
+        # Validate THETA range
+        if not (-180 <= THETA <= 180):
+            raise ValueError(
+                f"THETA must be between -180 and 180 degrees, got: {THETA}"
+            )
+
+        # Validate PHI range
+        if not (-90 <= PHI <= 90):
+            raise ValueError(
+                f"PHI must be between -90 and 90 degrees, got: {PHI}"
+            )
+
+        # Validate output dimensions
+        if height <= 0:
+            raise ValueError(
+                f"height must be greater than 0, got: {height}"
+            )
+
+        if width <= 0:
+            raise ValueError(
+                f"width must be greater than 0, got: {width}"
+            )
 
         f = 0.5 * width * 1 / np.tan(0.5 * FOV / 180.0 * np.pi)
         cx = (width - 1) / 2.0
