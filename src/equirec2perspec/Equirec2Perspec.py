@@ -21,7 +21,6 @@ else:
     except ImportError:
         logger.debug("USING opencv imread")
         TurboJPEG = None
-    TurboJPEG = None
 
 
 def load_image(path: Union[str, Path]) -> np.ndarray:
@@ -76,14 +75,17 @@ def load_image(path: Union[str, Path]) -> np.ndarray:
 
 
 def xyz2lonlat(xyz: np.ndarray) -> np.ndarray:
-    """Convert 3D Cartesian coordinates to spherical longitude/latitude.
+    """Convert 3D Cartesian coordinates to spherical longitude/latitude coordinates.
 
     Args:
-        xyz: Array of 3D Cartesian coordinates with shape (..., 3)
+        xyz: Array of 3D Cartesian coordinates with shape (..., 3) where the last
+            dimension contains [x, y, z] coordinates
 
     Returns:
-        Array of spherical coordinates (longitude, latitude) with shape (..., 2)
-        where longitude is in [-π, π] and latitude is in [-π/2, π/2]
+        Array of spherical coordinates with shape (..., 2) where the last dimension
+        contains [longitude, latitude] in radians. Longitude ranges from -π to π,
+        latitude ranges from -π/2 to π/2.
+
     """
     atan2 = np.arctan2
     asin = np.arcsin
@@ -103,14 +105,17 @@ def xyz2lonlat(xyz: np.ndarray) -> np.ndarray:
 
 
 def lonlat2XY(lonlat: np.ndarray, shape: Tuple[int, int, int]) -> np.ndarray:
-    """Convert spherical longitude/latitude to image pixel coordinates.
+    """Convert spherical longitude/latitude coordinates to equirectangular image pixel coordinates.
 
     Args:
-        lonlat: Array of spherical coordinates (longitude, latitude) with shape (..., 2)
-        shape: Shape of the target equirectangular image (height, width, channels)
+        lonlat: Array of spherical coordinates with shape (..., 2) where the last
+            dimension contains [longitude, latitude] in radians
+        shape: Shape of the equirectangular image as (height, width, channels)
 
     Returns:
-        Array of pixel coordinates (X, Y) with shape (..., 2) suitable for cv2.remap
+        Array of pixel coordinates with shape (..., 2) where the last dimension
+        contains [X, Y] pixel positions in the equirectangular image.
+
     """
     X = (lonlat[..., 0:1] / (2 * np.pi) + 0.5) * (shape[1] - 1)
     Y = (lonlat[..., 1:] / (np.pi) + 0.5) * (shape[0] - 1)
@@ -179,20 +184,20 @@ class Equirectangular:
     ) -> np.ndarray:
         """Split equirectangular panorama into normal perspective view.
 
-        Args:
-            FOV (float): Field of view in degrees (must be between 1 and 180)
-            THETA (float): left/right angle in degrees (horizontal rotation, -180 to 180)
-            PHI (float): up/down angle in degrees (vertical rotation, -90 to 90)
-            height (int): output image height (must be > 0)
-            width (int): output image width (must be > 0)
-            interpolation (_type_, optional): see cv2.remap. Defaults to cv2.INTER_CUBIC.
+                Args:
+                    FOV (float): Field of view in degrees (must be between 1 and 180)
+                    THETA (float): left/right angle in degrees (horizontal rotation, -180 to 180)
+                    PHI (float): up/down angle in degrees (vertical rotation, -90 to 90)
+                    height (int): output image height (must be > 0)
+                    width (int): output image width (must be > 0)
+                    interpolation (int, optional): OpenCV interpolation method. Defaults to cv2.INTER_CUBIC.
+                        See cv2.remap for all available options.
 
-        Returns:
-            np.ndarray: perspective view
+                Returns:
+                    np.ndarray: Perspective view image as a numpy array
 
-        Raises:
-            ValueError: If any input parameter is out of valid range
-
+                Raises:
+                    ValueError: If any input parameter is out of valid range
         Example:
             >>> import equirec2perspec
             >>> # Load panorama and extract perspective view
