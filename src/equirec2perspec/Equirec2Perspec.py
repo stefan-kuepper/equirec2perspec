@@ -5,6 +5,14 @@ from typing import Optional, Tuple, Union
 import cv2
 import numpy as np
 
+from .perspective_helpers import (
+    apply_transformations_and_remap,
+    build_camera_matrix,
+    compute_rotation_matrices,
+    generate_3d_coordinates,
+    validate_perspective_params,
+)
+
 logger = logging.getLogger(__name__)
 
 try:
@@ -209,57 +217,15 @@ class Equirectangular:
             ...     # Extract up view (45° FOV, looking 30° up)
             ...     up_view = equ.get_perspective(45, 0, -30, 720, 1080)
         """
-        # Validate FOV range
-        if not (1 <= FOV <= 180):
-            raise ValueError(f"FOV must be between 1 and 180 degrees, got: {FOV}")
+        # Validate input parameters
+        validate_perspective_params(FOV, THETA, PHI, height, width)
 
-        # Validate THETA range
-        if not (-180 <= THETA <= 180):
-            raise ValueError(
-                f"THETA must be between -180 and 180 degrees, got: {THETA}"
-            )
+        # Build camera matrix and generate 3D coordinates
+        K, K_inv = build_camera_matrix(FOV, width, height)
+        xyz = generate_3d_coordinates(width, height, K_inv)
 
-        # Validate PHI range
-        if not (-90 <= PHI <= 90):
-            raise ValueError(f"PHI must be between -90 and 90 degrees, got: {PHI}")
+        # Compute rotation matrices
+        R = compute_rotation_matrices(THETA, PHI)
 
-        # Validate output dimensions
-        if height <= 0:
-            raise ValueError(f"height must be greater than 0, got: {height}")
-
-        if width <= 0:
-            raise ValueError(f"width must be greater than 0, got: {width}")
-
-        f = 0.5 * width * 1 / np.tan(0.5 * FOV / 180.0 * np.pi)
-        cx = (width - 1) / 2.0
-        cy = (height - 1) / 2.0
-        K = np.array(
-            [
-                [f, 0, cx],
-                [0, f, cy],
-                [0, 0, 1],
-            ],
-            np.float32,
-        )
-        K_inv = np.linalg.inv(K)
-
-        x = np.arange(width)
-        y = np.arange(height)
-        x, y = np.meshgrid(x, y)
-        z = np.ones_like(x)
-        xyz = np.concatenate([x[..., None], y[..., None], z[..., None]], axis=-1)
-        xyz = xyz @ K_inv.T
-
-        y_axis = np.array([0.0, 1.0, 0.0], np.float32)
-        x_axis = np.array([1.0, 0.0, 0.0], np.float32)
-        R1, _ = cv2.Rodrigues(y_axis * np.radians(THETA))
-        R2, _ = cv2.Rodrigues(np.dot(R1, x_axis) * np.radians(PHI))
-        R = R2 @ R1
-        xyz = xyz @ R.T
-        lonlat = xyz2lonlat(xyz)
-        XY = lonlat2XY(lonlat, shape=self._img.shape).astype(np.float32)
-        persp = cv2.remap(
-            self._img, XY[..., 0], XY[..., 1], interpolation, borderMode=cv2.BORDER_WRAP
-        )
-
-        return persp
+        # Apply transformations and return final image
+        return apply_transformations_and_remap(xyz, R, self._img, interpolation)
