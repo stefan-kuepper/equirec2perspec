@@ -147,8 +147,6 @@ def apply_transformations_and_remap(
     XY = lonlat2XY(lonlat, shape=source_image.shape).astype(np.float32)
 
     # Perform final remapping
-    persp = cv2.remap(
+    return cv2.remap(
         source_image, XY[..., 0], XY[..., 1], interpolation, borderMode=cv2.BORDER_WRAP
     )
-
-    return persp

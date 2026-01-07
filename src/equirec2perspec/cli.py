@@ -171,7 +171,7 @@ def main(
     try:
         output_width, output_height = _calculate_dimensions(width, height)
     except ValueError as e:
-        raise click.BadParameter(str(e))
+        raise click.BadParameter(str(e)) from e
 
     # Check output directory is writable
     output_dir = Path(output_path).parent
@@ -179,7 +179,7 @@ def main(
         try:
             output_dir.mkdir(parents=True, exist_ok=True)
         except OSError as e:
-            raise click.ClickException(f"Cannot create output directory: {e}")
+            raise click.ClickException(f"Cannot create output directory: {e}") from e
 
     if not os.access(output_dir, os.W_OK):
         raise click.ClickException(f"Output directory is not writable: {output_dir}")
@@ -221,11 +221,11 @@ def main(
                 click.echo(f"✓ {output_path}")
 
     except FileNotFoundError as e:
-        raise click.ClickException(f"File not found: {e}")
+        raise click.ClickException(f"File not found: {e}") from e
     except ValueError as e:
-        raise click.ClickException(f"Invalid parameter: {e}")
+        raise click.ClickException(f"Invalid parameter: {e}") from e
     except Exception as e:
-        raise click.ClickException(f"Processing failed: {e}")
+        raise click.ClickException(f"Processing failed: {e}") from e
 
 
 if __name__ == "__main__":

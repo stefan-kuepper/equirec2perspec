@@ -109,7 +109,6 @@ select = [
     "ARG001", # unused arguments in functions
     "SIM108", # ternary operators instead of if-else
     "RET504", # unnecessary assignment before return
-    "PLC1901", # empty string comparisons
 ]
 
 ignore = [
@@ -120,7 +119,6 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = [
     "ARG001", # unused arguments in test functions
-    "B001",   # do not use bare except
 ]
 
 [tool.ruff.lint.isort]

@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Optional, Tuple, Union
+from typing import Optional, Union
 
 import cv2
 import numpy as np
@@ -66,8 +66,8 @@ def load_image(path: Union[str, Path]) -> np.ndarray:
         else:
             image = cv2.imread(path_str, cv2.IMREAD_COLOR)
             logger.debug(f"Successfully decoded with OpenCV: {path_str}")
-    except (OSError, IOError) as e:
-        raise IOError(f"Failed to read image file: {path}") from e
+    except OSError as e:
+        raise OSError(f"Failed to read image file: {path}") from e
 
     # Validate image was decoded successfully
     if image is None:
@@ -108,7 +108,7 @@ def xyz2lonlat(xyz: np.ndarray) -> np.ndarray:
     return out
 
 
-def lonlat2XY(lonlat: np.ndarray, shape: Tuple[int, int, int]) -> np.ndarray:
+def lonlat2XY(lonlat: np.ndarray, shape: tuple[int, int, int]) -> np.ndarray:
     """Convert spherical longitude/latitude coordinates to equirectangular image pixel coordinates.
 
     Args:
