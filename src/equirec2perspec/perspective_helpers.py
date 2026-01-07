@@ -9,6 +9,8 @@ separately testable and maintainable.
 import cv2
 import numpy as np
 
+from .profiling import profile
+
 
 def validate_perspective_params(
     FOV: float, THETA: float, PHI: float, height: int, width: int
@@ -45,6 +47,7 @@ def validate_perspective_params(
         raise ValueError(f"width must be greater than 0, got: {width}")
 
 
+@profile("build_camera_matrix")
 def build_camera_matrix(
     FOV: float, width: int, height: int
 ) -> tuple[np.ndarray, np.ndarray]:
@@ -75,6 +78,7 @@ def build_camera_matrix(
     return K, K_inv
 
 
+@profile("generate_3d_coordinates")
 def generate_3d_coordinates(width: int, height: int, K_inv: np.ndarray) -> np.ndarray:
     """Generate 3D ray coordinates for each pixel in the output image.
 
@@ -97,6 +101,7 @@ def generate_3d_coordinates(width: int, height: int, K_inv: np.ndarray) -> np.nd
     return result
 
 
+@profile("compute_rotation_matrices")
 def compute_rotation_matrices(THETA: float, PHI: float) -> np.ndarray:
     """Compute combined rotation matrix for THETA and PHI angles.
 
@@ -118,6 +123,7 @@ def compute_rotation_matrices(THETA: float, PHI: float) -> np.ndarray:
     return result
 
 
+@profile("apply_transformations_and_remap")
 def apply_transformations_and_remap(
     xyz: np.ndarray,
     R: np.ndarray,
