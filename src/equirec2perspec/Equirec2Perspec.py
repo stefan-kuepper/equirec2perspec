@@ -12,6 +12,7 @@ from .perspective_helpers import (
     generate_3d_coordinates,
     validate_perspective_params,
 )
+from .profiling import profile
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +25,7 @@ except ImportError:
     logger.debug("TurboJPEG not available, using OpenCV")
 
 
+@profile("load_image")
 def load_image(path: Union[str, Path]) -> np.ndarray:
     """Load an image from file path, supporting both str and Path objects.
 
@@ -180,6 +182,7 @@ class Equirectangular:
         """
         pass
 
+    @profile("get_perspective")
     def get_perspective(
         self,
         FOV: float,
