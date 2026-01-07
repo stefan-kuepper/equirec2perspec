@@ -46,7 +46,7 @@ print("-" * 80)
 for name, stat in all_stats.items():
     print(f"  {name}:")
     print(f"    Executions: {stat['count']}")
-    print(f"    Avg time:   {stat['mean']*1000:.3f}ms")
+    print(f"    Avg time:   {stat['mean'] * 1000:.3f}ms")
     if stat["count"] > 1:
-        print(f"    Total time: {stat['total']*1000:.3f}ms")
+        print(f"    Total time: {stat['total'] * 1000:.3f}ms")
 print("=" * 80)

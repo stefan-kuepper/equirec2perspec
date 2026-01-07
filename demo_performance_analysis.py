@@ -44,9 +44,13 @@ for height, width, label in resolutions:
     coord_gen = all_stats.get("generate_3d_coordinates", {}).get("total", 0)
     remap = all_stats.get("apply_transformations_and_remap", {}).get("total", 0)
 
-    print(f"  Total time:        {total_time*1000:.2f}ms")
-    print(f"  Coord generation:  {coord_gen*1000:.2f}ms ({coord_gen/total_time*100:.1f}%)")
-    print(f"  Remap operation:   {remap*1000:.2f}ms ({remap/total_time*100:.1f}%)")
+    print(f"  Total time:        {total_time * 1000:.2f}ms")
+    print(
+        f"  Coord generation:  {coord_gen * 1000:.2f}ms ({coord_gen / total_time * 100:.1f}%)"
+    )
+    print(
+        f"  Remap operation:   {remap * 1000:.2f}ms ({remap / total_time * 100:.1f}%)"
+    )
     print()
 
 print("-" * 80)
@@ -68,9 +72,7 @@ all_stats = stats.get_all_stats()
 
 # Calculate what percentage of time each operation takes
 total_entries = len(stats.entries)
-operations_sorted = sorted(
-    all_stats.items(), key=lambda x: x[1]["total"], reverse=True
-)
+operations_sorted = sorted(all_stats.items(), key=lambda x: x[1]["total"], reverse=True)
 
 print("Time Distribution:")
 print("-" * 80)
@@ -83,7 +85,7 @@ for op_name, op_stats in operations_sorted:
     bar_length = int(percentage / 2)
     bar = "█" * bar_length
 
-    print(f"{op_name:35s} {bar} {percentage:5.1f}% ({op_stats['total']*1000:6.1f}ms)")
+    print(f"{op_name:35s} {bar} {percentage:5.1f}% ({op_stats['total'] * 1000:6.1f}ms)")
 
 print("-" * 80)
 print()

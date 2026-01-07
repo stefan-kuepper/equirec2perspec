@@ -68,11 +68,15 @@ print()
 # Highlight custom operations
 print("Custom Operations Highlighted:")
 print("-" * 80)
-custom_ops = ["custom_preprocessing", "generate_cardinal_views", "generate_vertical_views"]
+custom_ops = [
+    "custom_preprocessing",
+    "generate_cardinal_views",
+    "generate_vertical_views",
+]
 for op_name in custom_ops:
     op_stats = stats.get_stats(op_name)
     if op_stats["count"] > 0:
         print(f"  {op_name}:")
-        print(f"    Time: {op_stats['total']*1000:.3f}ms")
+        print(f"    Time: {op_stats['total'] * 1000:.3f}ms")
 print()
 print("=" * 80)
